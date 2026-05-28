@@ -1,1 +1,107 @@
+wtext(text='\nRamp Angle   ')
+wtext(text='-90')
+weight_slider = slider(bind = ramp_angle_change, min=0, max=90)
+wtext(text='90')
 
+wtext(text='\nCoefficient of Friction   ')
+wtext(text='0')
+ramp_angle_slider = slider(bind = ramp_angle_change, min=0, max=1)
+wtext(text='1')
+
+wtext(text='\nForce on Brakes   ')
+wtext(text='0 N')
+forceBrake_slider = slider(bind = ramp_angle_change, min=0, max=90)
+wtext(text='1000 N')
+
+wtext(text='\nWeight of Person   ')
+wtext(text='0 N')
+weight_slider = slider(bind = ramp_angle_change, min=0, max=90)
+wtext(text='1000 N')
+
+wtext(text='\nForce on Pedals   ')
+wtext(text='0 N')
+weight_slider = slider(bind = ramp_angle_change, min=0, max=90)
+wtext(text='1000 N')
+
+button(bind=weightChange, text="Click to Brake", background=color.green, pos=scene.title_anchor)
+
+r_angle = 0
+weight = 0
+
+def ramp_angle_change():
+    r_angle = ramp_angle
+
+def weightChange():
+    w = weight
+
+g = graph(title="Kinetic Energy vs Time", xtitle="Time", ytitle="Kinetic Energy", align = 'left')
+
+c = gcurve(graph=g)
+
+t = 0
+dt = 0.1
+
+while t < 10:
+    rate(500)
+    c.plot(t, 100 - t**1.5)
+    t += dt
+
+g = graph(title="Gravitational Potential Energy vs Time", xtitle="Time", ytitle="Potential Energy", align = 'right')
+
+c = gcurve(graph=g)
+
+t = 0
+dt = 0.1
+
+while t < 10:
+    rate(500)
+    c.plot(t, t*1.5)
+    t += dt
+
+g = graph(title="Energy Lost by Friction vs Time", xtitle="Time", ytitle="Heat Energy", align = 'left')
+
+c = gcurve(graph=g)
+
+t = 0
+dt = 0.1
+
+while t < 10:
+    rate(500)
+    c.plot(t, t)
+    t += dt
+    
+g = graph(title="Speed vs Time", xtitle="Time", ytitle="Speed", align = 'right')
+
+c = gcurve(graph=g)
+
+t = 0
+dt = 0.1
+
+while t < 10:
+    rate(500)
+    c.plot(t, t)
+    t += dt
+    
+g = graph(title="Torque vs Time", xtitle="Time", ytitle="Torque")
+
+c = gcurve(graph=g)
+
+t = 0
+dt = 0.1
+
+while t < 10:
+    rate(500)
+    c.plot(t, t)
+    t += dt
+
+g = graph(title="Power vs Time", xtitle="Time", ytitle="Power", align = 'right')
+
+c = gcurve(graph=g)
+
+t = 0
+dt = 0.1
+
+while t < 10:
+    rate(500)
+    c.plot(t, t)
+    t += dt
