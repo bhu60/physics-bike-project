@@ -1,0 +1,44 @@
+acc = 0
+running = True
+wheelMass = 100
+totalMass = 1000
+tickRate = 10
+kineticE = 0
+potentialE = 0
+heatE = 
+time = 0
+vInitial = 0
+vFinal = 0
+rolling = True
+
+def ifRolling():
+    
+
+while running:
+    rate(tickRate)
+    acc += pedalsForce / wheelMass
+    acc -= totalMass * 9.81 * sin(rampAngle * pi / 180.0)
+    if (rolling):
+        vFinal = vInitial + acc / tickRate
+        kineticE += 0.5 * totalMass * vFinal * vFinal - 0.5 * totalMass * vInitial * vInitial
+        potentailE += (vInitial / tickRate) * sin(rampAngle * pi / 180.0) * totalMass * 9.81
+        heatE += 
+        
+        
+        
+    
+
+
+class Person:
+    def __init__(weight, start_pos, start_vel, forceActed):
+        self.weight = weight
+        self.start_pos = vector(0,0,0)
+        self.start_vel = vector(0,0,0)
+        #forceActed = 
+
+
+
+class Wheel:
+    def __init__(rad, start_pos, start_vel):
+        self.wheel = cylinder(pos=start_pos, axis=vec(1,0,0), color = color.black)
+        self.velocity = start_vel
