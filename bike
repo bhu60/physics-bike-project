@@ -1,44 +1,270 @@
-acc = 0
+Web VPython 3.2
+
+scene.background = color.black
+scene.range = 50
+rampAngle = 0
+riderMass = 10
+bikeMass = 50
+backBrakeForce = 0
+frontBrakeForce = 0
+pedalsForce = 0
+staticFricGW = 0
+kineticFricGW = 0
+bikeWeight = 0
+theta = rampAngle * pi / 180.0
+deltaT = 0.01
+
+#
+#scene = canvas(width=600, height=300)
+#wheel1=ring(pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white)
+#spoke1=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0))
+#spoke2=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0))
+#spoke3=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0))
+#spoke4=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0))
+#spoke5=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0))
+#wheel2=ring(pos=vec(7,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white)
+#spoke6=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0))
+#spoke7=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0))
+#spoke8=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0))
+#spoke9=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0))
+#spoke10=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0))
+#a=vertex(pos=vec(3,5,0))
+#b=vertex(pos=vec(10,5,0))
+#c=vertex(pos=vec(13,10,0))
+#d=vertex(pos=vec(7,10,0))
+#bikebody = quad(vs = [a,b,c,d])
+
+
+
+scene.caption = "\nRamp Angle: "
+def setRampAngle(rampAngleSlider):
+    global rampAngle
+    rampAngleText.text = '{:1.1f}'.format(rampAngleSlider.value)
+    rampAngle = rampAngleSlider.value
+rampAngleSlider = slider(bind = setRampAngle, min=-90, max=90, step = 1, value = 0)
+rampAngleText = wtext(text='{:1.1f}'.format(rampAngleSlider.value))
+scene.append_to_caption(' degrees')
+
+
+scene.append_to_caption('\nRider Mass: ')
+def setRiderMass(weightSlider):
+    global riderMass
+    riderMassText.text = '{:1.1f}'.format(riderMassSlider.value)
+    riderMass = riderMassSlider.value
+riderMassSlider = slider(bind = setRiderMass, min=10, max=20, step = 0.1, value = 10)
+riderMassText = wtext(text='{:1.1f}'.format(riderMassSlider.value))
+scene.append_to_caption(' Kilograms')
+
+scene.append_to_caption('\nBike Mass: ')
+def setBikeMass(bikeMassSlider):
+    global bikeMass
+    bikeMassText.text = '{:1.1f}'.format(bikeMassSlider.value)
+    bikeMass = bikeMassSlider.value
+bikeMassSlider = slider(bind = setBikeMass, min=10, max=100, step = 1, value = 50)
+bikeMassText = wtext(text='{:1.1f}'.format(bikeMassSlider.value))
+scene.append_to_caption(' Kilograms')
+
+scene.append_to_caption('\nForce on Back Brakes: ')
+def setBackBrakeForce(backBrakeForceSlider):
+    global backBrakeForce
+    backBrakeForceText.text = '{:1.1f}'.format(backBrakeForceSlider.value)
+    backBrakeForce = backBrakeForceSlider.value
+backBrakeForceSlider = slider(bind = setBackBrakeForce, min=0, max=1000, step = 5, value = 0)
+backBrakeForceText = wtext(text='{:1.1f}'.format(backBrakeForceSlider.value))
+scene.append_to_caption(' Newtons')
+
+scene.append_to_caption('\nForce on Front Brakes: ')
+def setFrontBrakeForce(frontBrakeForceSlider):
+    global frontBrakeForce
+    frontBrakeForceText.text = '{:1.1f}'.format(frontBrakeForceSlider.value)
+    frontBrakeForce = frontBrakeForceSlider.value
+frontBrakeForceSlider = slider(bind = setFrontBrakeForce, min=0, max=1000, step = 5, value = 0)
+frontBrakeForceText = wtext(text='{:1.1f}'.format(frontBrakeForceSlider.value))
+scene.append_to_caption(' Newtons')
+
+scene.append_to_caption('\nForce on Pedals: ')
+def setpedalsForce(pedalsForceSlider):
+    global pedalsForce
+    pedalsForceText.text = '{:1.1f}'.format(pedalsForceSlider.value)
+    pedalsForce = pedalsForceSlider.value
+pedalsForceSlider = slider(bind = setpedalsForce, min=0, max=1000, step = 5, value = 0)
+pedalsForceText = wtext(text='{:1.1f}'.format(pedalsForceSlider.value))
+scene.append_to_caption(' Newtons')
+
+scene.append_to_caption('\nStatic Friction (Ground, Wheel): ')
+def setStaticFricGW(staticFricGWSlider):
+    global staticFricGW
+    staticFricGWText.text = '{:1.2f}'.format(staticFricGWSlider.value)
+    staticFricGW = staticFricGWSlider.value
+staticFricGWSlider = slider(bind = setStaticFricGW, min=0, max=1, step = 0.01, value = 0)
+staticFricGWText = wtext(text='{:1.2f}'.format(staticFricGWSlider.value))
+
+scene.append_to_caption('\nKinetic Friction (Ground, Wheel): ')
+def setKineticFricGW(kineticFricGWSlider):
+    global kineticFricGW
+    kineticFricGWText.text = '{:1.2f}'.format(kineticFricGWSlider.value)
+    kineticFricGW = kineticFricGWSlider.value
+kineticFricGWSlider = slider(bind = setKineticFricGW, min=0, max=1, step = 0.01, value = 0)
+kineticFricGWText = wtext(text='{:1.2f}'.format(kineticFricGWSlider.value))
+
+backWheelX = 0
+frontWheelX = 7
+bikeCOMX = 3.5
+seatX = 2.5
+COMX = (riderMass * seatX + bikeMass * bikeCOMX) / (bikeMass + riderMass)
+COMY = 4
+backToCOM = COMX - backWheelX
+COMToFront = frontWheelX - COMX
+Nfront = 0
+Nback = 0
+
+rampLine = []
+for i in range(-20,20):
+    rampLine.append(
+        box(
+            pos=vec(i*20, 0, 0),
+            size=vec(20, 0.2, 1),
+            color=color.white
+        )
+    )
+
+rampStripes = []
+for j in range(-50, 51):
+    if j % 3 == 0:
+        stripeColor = color.red
+    elif j % 3 == 1:
+        stripeColor = color.orange
+    else:
+        stripeColor = color.yellow
+    rampStripes.append(
+        box(
+            pos=vec(j*10, 0, 0),
+            size=vec(3, 1, 1.1),
+            color=stripeColor
+        )
+    )
+    
+bikeObject = box(pos = vec(0, 2, 0), size = vec(5, 20, 3), color = color.green)
+
+class Bike:
+    def __init__(self):
+        global bikeMass, riderMass
+        self.pos = 0
+        self.vel = 0
+        self.acc = 0
+        self.kineticE = 0
+        self.potentialE = 0
+        self.heatE = 0
+        self.crankRad = 0.17
+        self.wheelRad = 0.3
+        self.frontSprocketRad = 0.03
+        self.backSprocketRad = 0.05
+        self.brakeForce = 0
+
+    def calculateNormalForces(self):
+        global theta, backToCOM, COMY, Nfront, Nback
+        gravityTorquePer = self.mass * 9.81 * cos(theta) * backToCOM
+        gravityTorquePara = self.mass * -9.81 * sin(theta) * COMY
+        inertiaTorque = self.mass * self.acc * COMY
+        Nfront = (gravityTorquePer + gravityTorquePara + inertiaTorque) / (frontWheelX - backWheelX)
+        Nback = self.mass * 9.81 * cos(theta) - Nfront
+    
+    def flip(self):
+        return self.acc > 9.81 * (backToCOM * cos(theta) / COMY - sin(theta))
+    
+    def skid(self):
+        if(frontBrakeForce > staticFricGW * Nfront):
+            return True
+        if(backBrakeForce > staticFricGW * Nback):
+            return True
+        return False
+    
+    
+    def calculateAcc(self):
+        global theta, Nback, frontBrakeForce, backBrakeForce, pedalsForce, staticFricGW, kineticFricGW, Nback
+        self.acc = 0
+        forceGround = pedalsForce * (self.backSprocketRad * self.crankRad) / (self.wheelRad * self.frontSprocketRad)
+        if(abs(self.vel) > 0):
+            print('a' + self.brakeForce)
+            if(self.vel > 1e-2):
+                self.brakeForce = -1 * min(frontBrakeForce + backBrakeForce, staticFricGW * Nback)
+                print('c' + (frontBrakeForce + backBrakeForce))
+                print('d' + staticFricGW * Nback)
+                print('b' + self.brakeForce)
+            else:
+                self.brakeForce = min(frontBrakeForce + backBrakeForce, staticFricGW * Nback)
+        self.acc += (self.brakeForce + forceGround) / self.mass - 9.81 * sin(theta)
+        if(self.skid()):
+            if(self.acc > 0):
+                self.acc -= kineticFricGW * Nback / self.mass
+            elif(self.acc < 0):
+                self.acc += kineticFricGW * Nback / self.mass
+    
+    def calculateVel(self):
+        global deltaT
+        self.vel += self.acc * deltaT
+        if (abs(self.vel) < 1e-2):
+            self.vel = 0
+        
+    def calculatePos(self):
+        global deltaT
+        self.pos += self.vel * deltaT
+    
+    def calculateEnergies(self):
+        global deltaT, kineticFricGW, theta, Nback
+        vInitial = self.vel
+        vFinal = self.vel + self.acc * deltaT
+        self.kineticE += 0.5 * self.mass * vFinal * vFinal - 0.5 * self.mass * vInitial * vInitial
+        self.potentialE += vInitial / deltaT * sin(theta) * self.mass * 9.81
+        if(rolling):
+            self.heatE += kineticFricGW * Nback * abs(sin(theta)) * deltaT
+    
 running = True
 wheelMass = 100
-totalMass = 1000
 tickRate = 10
 kineticE = 0
 potentialE = 0
-heatE = 
+heatE = 0
 time = 0
 vInitial = 0
 vFinal = 0
 rolling = True
+angularV = 0
+ticks = 0
+time = 0
 
-def ifRolling():
-    
+bike = Bike()
 
 while running:
-    rate(tickRate)
-    acc += pedalsForce / wheelMass
-    acc -= totalMass * 9.81 * sin(rampAngle * pi / 180.0)
-    if (rolling):
-        vFinal = vInitial + acc / tickRate
-        kineticE += 0.5 * totalMass * vFinal * vFinal - 0.5 * totalMass * vInitial * vInitial
-        potentailE += (vInitial / tickRate) * sin(rampAngle * pi / 180.0) * totalMass * 9.81
-        heatE += 
-        
-        
-        
+    scene.camera.follow(bikeObject)
+    print('Position: ' + bike.pos)
+    print('Velocity: ' + bike.vel)
+    print('Acceleration: ' + bike.acc)
+    print('Brake Force: ' + bike.brakeForce)
+    bike.mass = riderMass + bikeMass
+    print(bike.skid())
+    print(bike.mass)
+    theta = rampAngle * pi / 180.0
+    rate(1 / deltaT)
+    scene.range = 50
+    scene.autoscale = False
+    bike.calculateNormalForces()
+    bike.calculateAcc()
+    bike.calculateVel()
+    bike.calculatePos()
+    bike.calculateEnergies()
+    bikeObject.axis = vec(cos(theta), sin(theta), 0)
+    bikeObject.pos = vec(bike.pos * 10 * cos(theta), bike.pos * 10 * sin(theta), 0)
+    dir = vec(cos(theta), sin(theta), 0)
+    for segment in rampLine: 
+        segment.axis = dir
+        segment.pos -= vec(bike.vel * deltaT * 100 * cos(theta), bike.vel * deltaT * 100 * sin(theta), 0) 
+        if segment.pos.x < bikeObject.pos.x - 100: 
+            segment.pos.x += 40 * 20
     
+    for j in range(len(rampStripes)):
+        rampStripes[j].axis = dir
+        rampStripes[j].pos =  (j - 50) * 10 * dir
 
-
-class Person:
-    def __init__(weight, start_pos, start_vel, forceActed):
-        self.weight = weight
-        self.start_pos = vector(0,0,0)
-        self.start_vel = vector(0,0,0)
-        #forceActed = 
-
-
-
-class Wheel:
-    def __init__(rad, start_pos, start_vel):
-        self.wheel = cylinder(pos=start_pos, axis=vec(1,0,0), color = color.black)
-        self.velocity = start_vel
+        
+        
