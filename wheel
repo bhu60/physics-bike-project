@@ -1,27 +1,72 @@
 Web VPython 3.2
 
 
-#button(bind=weightChange, text="Click to Brake", background=color.green, pos=scene.title_anchor)
-
-
 #make bike
 scene = canvas(width=600, height=300)
-wheel1=ring(pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white)
-spoke1=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0))
-spoke2=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0))
-spoke3=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0))
-spoke4=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0))
-spoke5=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0))
-wheel2=ring(pos=vec(7,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white)
-spoke6=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0))
-spoke7=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0))
-spoke8=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0))
-spoke9=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0))
-spoke10=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0))
-a=vertex(pos=vec(3,5,0))
-b=vertex(pos=vec(10,5,0))
-c=vertex(pos=vec(13,10,0))
-d=vertex(pos=vec(7,10,0))
-bikebody = quad(vs = [a,b,c,d])
+wheel1=ring(pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
+spoke1=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
+spoke2=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
+spoke3=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0), color=color.white*0.5)
+spoke4=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0), color=color.white*0.5)
+spoke5=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0), color=color.white*0.5)
+wheel2=ring(pos=vec(7,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
+spoke6=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
+spoke7=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
+spoke8=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0), color=color.white*0.5)
+spoke9=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0), color=color.white*0.5)
+spoke10=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0), color=color.white*0.5)
+#a=vertex(pos=vec(0,0,0))
+#b=vertex(pos=vec(7,0,0))
+#c=vertex(pos=vec(11,3,0))
+#d=vertex(pos=vec(4,3,0))
+#bikebody = quad(vs = [a,b,c,d], color=color.white*0.5)
+#make rods instead?
+#bikebody1=cylinder(pos=vec(7,0,0), axis=vec(0.3,0.7,0), size=vec(3,0.2,0.2), color=color.white*0.5)
+#bikebody2=cylinder(pos=vec(0,0,0), axis=vec(0.3,0.7,0), size=vec(3,0.2,0.2), color=color.white*0.5)
+#bikebody3=cylinder(pos=vec(0,0,0), size=vec(7,0.2,0.2), color=color.white*0.5)
+#bikebody4=cylinder(pos=vec(1.25,2.7,0), size=vec(7,0.2,0.2), color=color.white*0.5)
+#bikebody=compound([bikebody1, bikebody2, bikebody3, bikebody4])
+bikebody1=cylinder(pos=vec(0,0,0), axis=vec(0.5,0.6,0), size=vec(3.5,0.2,0.2), color=color.white*0.5)
+bikebody2=cylinder(pos=vec(0,0,0), axis=vec(0.5,-0.1,0), size=vec(3.3,0.2,0.2), color=color.white*0.5)
+bikebody3=cylinder(pos=vec(2.35,2.5,0), axis=vec(0.15,-0.6,0), size=vec(3.4,0.2,0.2), color=color.white*0.5)
+bikebody4=cylinder(pos=vec(2.35,2.5,0), axis=vec(0.7,0.15,0), size=vec(4.7,0.2,0.2), color=color.white*0.5)
+bikebody5=cylinder(pos=vec(3,-0.71,0), axis=vec(0.7,0.7,0), size=vec(5.75,0.2,0.2), color=color.white*0.5)
+bikebody=compound([bikebody1, bikebody2, bikebody3, bikebody4, bikebody5])
 
-bike = compound([wheel1, spoke1, spoke2, spoke3, spoke4, spoke5, wheel2, spoke6, spoke7, spoke8, spoke9, spoke10, bikebody], pos=vec(0,0,0))
+bar = cylinder(pos=vec(7,0,0), axis=vec(0,1,0), size=vec(5,0.2,0.2), color=color.white*0.5)
+handlebars = cylinder(pos=vec(5,5,0), axis=vec(0.7,0,0.3), size = vec(3,0.2,0.2), color=color.white*0.5)
+
+#pedal=ring(pos=vec(3,-0.71,0),
+
+head=sphere(pos=vec(3.5,5,0), radius=0.5, color=color.blue)
+neck=cylinder(pos=vec(3.5,4,0), axis=vec(0,1,0), size=vec(0.5,0.4,0.1), color=color.blue)
+body=cylinder(pos=vec(3.5,0.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
+biker=compound([head, neck, body])
+bike = compound([wheel1, spoke1, spoke2, spoke3, spoke4, spoke5, wheel2, spoke6, spoke7, spoke8, spoke9, spoke10, bikebody, bar, handlebars, biker], pos=vec(0,0,0))
+
+#when biker mas is greater, biker body width increases; which is used in com
+#def changebikersize(sz):
+ ##      body.width=sz.value
+def changebikersize(sz):
+    biker.size = vec(1+sz.value,1,1)
+    print sz.value
+scene.append_to_caption("\nWeight of Biker (N) \n")
+scene.append_to_caption("0")
+bikerweight = slider(bind=changebikersize, min=0, max=1000, value=biker.size.x)
+scene.append_to_caption("1000")
+#if input <0, biker x position decreases by input; if input>0, biker x position increases by input
+def movebiker(s):
+    if s.value > 0:
+        biker.pos.x = s.value
+    
+
+
+#scene.title="\n Shift Biker Right?\n"
+#bikerright=slider(bind=movebiker, min=-10, max=10)
+
+#scene.title="\n Shift Biker Left?\n"
+#bikerleft=slider(bind=movebiker, min=-10, max=10)
+
+#offset to move with bike?
+
+    
