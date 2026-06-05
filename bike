@@ -185,12 +185,8 @@ class Bike:
         self.acc = 0
         forceGround = pedalsForce * (self.backSprocketRad * self.crankRad) / (self.wheelRad * self.frontSprocketRad)
         if(abs(self.vel) > 0):
-            print('a' + self.brakeForce)
             if(self.vel > 1e-2):
                 self.brakeForce = -1 * min(frontBrakeForce + backBrakeForce, staticFricGW * Nback)
-                print('c' + (frontBrakeForce + backBrakeForce))
-                print('d' + staticFricGW * Nback)
-                print('b' + self.brakeForce)
             else:
                 self.brakeForce = min(frontBrakeForce + backBrakeForce, staticFricGW * Nback)
         self.acc += (self.brakeForce + forceGround) / self.mass - 9.81 * sin(theta)
@@ -242,8 +238,8 @@ while running:
     print('Acceleration: ' + bike.acc)
     print('Brake Force: ' + bike.brakeForce)
     bike.mass = riderMass + bikeMass
-    print(bike.skid())
-    print(bike.mass)
+    print("Skid? " + bike.skid())
+    print('Flip? ' + bike.flip())
     theta = rampAngle * pi / 180.0
     rate(1 / deltaT)
     scene.range = 50
