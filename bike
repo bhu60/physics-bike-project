@@ -3,8 +3,8 @@ Web VPython 3.2
 scene.background = color.black
 scene.range = 50
 rampAngle = 0
-riderMass = 10
-bikeMass = 50
+bikeMass = 10
+riderMass = 50
 backBrakeForce = 0
 frontBrakeForce = 0
 pedalsForce = 0
@@ -13,27 +13,106 @@ kineticFricGW = 0
 bikeWeight = 0
 theta = rampAngle * pi / 180.0
 deltaT = 0.01
+justReset = False
+#make bike
 
-#
-#scene = canvas(width=600, height=300)
-#wheel1=ring(pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white)
-#spoke1=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0))
-#spoke2=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0))
-#spoke3=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0))
-#spoke4=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0))
-#spoke5=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0))
-#wheel2=ring(pos=vec(7,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white)
-#spoke6=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0))
-#spoke7=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0))
-#spoke8=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0))
-#spoke9=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0))
-#spoke10=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0))
-#a=vertex(pos=vec(3,5,0))
-#b=vertex(pos=vec(10,5,0))
-#c=vertex(pos=vec(13,10,0))
-#d=vertex(pos=vec(7,10,0))
-#bikebody = quad(vs = [a,b,c,d])
+reset = button(bind = resetButton, text = 'Reset', background = color.green, pos=scene.title_anchor)
 
+def resetButton(): 
+    global rampAngle, riderMass, bikeMass, backBrakeForce, frontBrakeForce, pedalsForce, staticFricGW, kineticFricGW, time, ticks, theta, Nfront, Nback , justReset
+    justReset = True
+    bike.pos = 0 
+    bike.vel = 0 
+    bike.acc = 0 
+    bike.mass = bikeMass + riderMass 
+    bike.kineticE = 0 
+    bike.potentialE = 0 
+    bike.heatE = 0 
+    theta = 0 
+    rampAngle = 0 
+    riderMass = 50 
+    bikeMass = 10 
+    backBrakeForce = 0 
+    frontBrakeForce = 0 
+    pedalsForce = 0 
+    staticFricGW = 0 
+    kineticFricGW = 0 
+    Nfront = 0 
+    Nback = 0 
+    rampAngleSlider.value = 0 
+    rampAngleText.text = '0.0' 
+    riderMassSlider.value = 10 
+    riderMassText.text = '10' 
+    bikeMassSlider.value = 50 
+    bikeMassText.text = '50' 
+    backBrakeForceSlider.value = 0 
+    backBrakeForceText.text = '0' 
+    frontBrakeForceSlider.value = 0 
+    frontBrakeForceText.text = '0' 
+    pedalsForceSlider.value = 0 
+    pedalsForceText.text = '0' 
+    staticFricGWSlider.value = 0 
+    staticFricGWText.text = '0' 
+    kineticFricGWSlider.value = 0 
+    kineticFricGWText.text = '0' 
+    time = 0 
+    ticks = 0 
+    bikeObject.pos = vec(0,0,0) 
+    bikeObject.axis = vec(0,0,0) 
+    bike.pos = 0 
+    bike.vel = 0 
+    bike.acc = 0 
+    bike.mass = bikeMass + riderMass 
+    bike.kineticE = 0 
+    bike.potentialE = 0 
+    bike.heatE = 0 
+    gPosCurve.delete() 
+    gVelCurve.delete() 
+    gAccCurve.delete() 
+    gKineticCurve.delete() 
+    gPotentialCurve.delete() 
+    gThermalCurve.delete() 
+    time = 0 
+    ticks = 0
+
+wheel1=ring(pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
+spoke1=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
+spoke2=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
+spoke3=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0), color=color.white*0.5)
+spoke4=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0), color=color.white*0.5)
+spoke5=box(pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0), color=color.white*0.5)
+wheel2=ring(pos=vec(7,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
+spoke6=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
+spoke7=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
+spoke8=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0), color=color.white*0.5)
+spoke9=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0), color=color.white*0.5)
+spoke10=box(pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0), color=color.white*0.5)
+#a=vertex(pos=vec(0,0,0))       
+#b=vertex(pos=vec(7,0,0))
+#c=vertex(pos=vec(11,3,0))
+#d=vertex(pos=vec(4,3,0))
+#bikebody = quad(vs = [a,b,c,d], color=color.white*0.5)
+#make rods instead?
+#bikebody1=cylinder(pos=vec(7,0,0), axis=vec(0.3,0.7,0), size=vec(3,0.2,0.2), color=color.white*0.5)
+#bikebody2=cylinder(pos=vec(0,0,0), axis=vec(0.3,0.7,0), size=vec(3,0.2,0.2), color=color.white*0.5)
+#bikebody3=cylinder(pos=vec(0,0,0), size=vec(7,0.2,0.2), color=color.white*0.5)
+#bikebody4=cylinder(pos=vec(1.25,2.7,0), size=vec(7,0.2,0.2), color=color.white*0.5)
+#bikebody=compound([bikebody1, bikebody2, bikebody3, bikebody4])
+bikebody1=cylinder(pos=vec(0,0,0), axis=vec(0.5,0.6,0), size=vec(3.5,0.2,0.2), color=color.white*0.5)
+bikebody2=cylinder(pos=vec(0,0,0), axis=vec(0.5,-0.1,0), size=vec(3.3,0.2,0.2), color=color.white*0.5)
+bikebody3=cylinder(pos=vec(2.35,2.5,0), axis=vec(0.15,-0.6,0), size=vec(3.4,0.2,0.2), color=color.white*0.5)
+bikebody4=cylinder(pos=vec(2.35,2.5,0), axis=vec(0.7,0.15,0), size=vec(4.7,0.2,0.2), color=color.white*0.5)
+bikebody5=cylinder(pos=vec(3,-0.71,0), axis=vec(0.7,0.7,0), size=vec(5.75,0.2,0.2), color=color.white*0.5)
+bikebody=compound([bikebody1, bikebody2, bikebody3, bikebody4, bikebody5])
+
+bar = cylinder(pos=vec(7,0,0), axis=vec(0,1,0), size=vec(5,0.2,0.2), color=color.white*0.5)
+handlebars = cylinder(pos=vec(5,5,0), axis=vec(0.7,0,0.3), size = vec(3,0.2,0.2), color=color.white*0.5)
+
+head=sphere(pos=vec(3.5,5,0), radius=0.5, color=color.blue)
+neck=cylinder(pos=vec(3.5,4,0), axis=vec(0,1,0), size=vec(0.5,0.4,0.1), color=color.blue)
+body=cylinder(pos=vec(3.5,0.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
+biker=compound([head, neck, body])
+bikeObject = compound([wheel1, spoke1, spoke2, spoke3, spoke4, spoke5, wheel2, spoke6, spoke7, spoke8, spoke9, spoke10, bikebody, bar, handlebars, biker], pos=vec(0,0,0))
 
 
 scene.caption = "\nRamp Angle: "
@@ -46,7 +125,7 @@ rampAngleText = wtext(text='{:1.1f}'.format(rampAngleSlider.value))
 scene.append_to_caption(' degrees')
 
 
-scene.append_to_caption('\nRider Mass: ')
+scene.append_to_caption('\nBike Mass: ')
 def setRiderMass(weightSlider):
     global riderMass
     riderMassText.text = '{:1.1f}'.format(riderMassSlider.value)
@@ -55,7 +134,7 @@ riderMassSlider = slider(bind = setRiderMass, min=10, max=20, step = 0.1, value 
 riderMassText = wtext(text='{:1.1f}'.format(riderMassSlider.value))
 scene.append_to_caption(' Kilograms')
 
-scene.append_to_caption('\nBike Mass: ')
+scene.append_to_caption('\nRider Mass: ')
 def setBikeMass(bikeMassSlider):
     global bikeMass
     bikeMassText.text = '{:1.1f}'.format(bikeMassSlider.value)
@@ -118,18 +197,10 @@ COMToFront = frontWheelX - COMX
 Nfront = 0
 Nback = 0
 
-rampLine = []
-for i in range(-20,20):
-    rampLine.append(
-        box(
-            pos=vec(i*20, 0, 0),
-            size=vec(20, 0.2, 1),
-            color=color.white
-        )
-    )
+rampLine = box(pos=vec(0,-0.3, 0), size=vec(50000, 0.8, 0.8), color=color.white)
 
 rampStripes = []
-for j in range(-50, 51):
+for j in range(-1000, 1000):
     if j % 3 == 0:
         stripeColor = color.red
     elif j % 3 == 1:
@@ -143,8 +214,6 @@ for j in range(-50, 51):
             color=stripeColor
         )
     )
-    
-bikeObject = box(pos = vec(0, 2, 0), size = vec(5, 20, 3), color = color.green)
 
 class Bike:
     def __init__(self):
@@ -152,6 +221,7 @@ class Bike:
         self.pos = 0
         self.vel = 0
         self.acc = 0
+        self.mass = bikeMass + riderMass
         self.kineticE = 0
         self.potentialE = 0
         self.heatE = 0
@@ -160,17 +230,16 @@ class Bike:
         self.frontSprocketRad = 0.03
         self.backSprocketRad = 0.05
         self.brakeForce = 0
-
-    def calculateNormalForces(self):
-        global theta, backToCOM, COMY, Nfront, Nback
-        gravityTorquePer = self.mass * 9.81 * cos(theta) * backToCOM
-        gravityTorquePara = self.mass * -9.81 * sin(theta) * COMY
-        inertiaTorque = self.mass * self.acc * COMY
-        Nfront = (gravityTorquePer + gravityTorquePara + inertiaTorque) / (frontWheelX - backWheelX)
-        Nback = self.mass * 9.81 * cos(theta) - Nfront
     
-    def flip(self):
-        return self.acc > 9.81 * (backToCOM * cos(theta) / COMY - sin(theta))
+    def frontFlip(self):
+        global Nback
+        print('Nback: ' + str(Nback))
+        return Nback <= 0
+        
+    def backFlip(self):
+        global Nfront
+        print('Nfront: ' + str(Nfront))
+        return Nfront <= 0
     
     def skid(self):
         if(frontBrakeForce > staticFricGW * Nfront):
@@ -181,15 +250,49 @@ class Bike:
     
     
     def calculateAcc(self):
-        global theta, Nback, frontBrakeForce, backBrakeForce, pedalsForce, staticFricGW, kineticFricGW, Nback
-        self.acc = 0
+        global theta, frontBrakeForce, backBrakeForce, pedalsForce, kineticFricGW, staticFricGW, Nfront, Nback
+        g = 9.81
+        m = self.mass
+    
+        COMX = (riderMass * seatX + bikeMass * bikeCOMX) / (bikeMass + riderMass)
+        backToCOM = COMX - backWheelX
+        wheelbase = frontWheelX - backWheelX
+    
         forceGround = pedalsForce * (self.backSprocketRad * self.crankRad) / (self.wheelRad * self.frontSprocketRad)
-        if(abs(self.vel) > 0):
-            if(self.vel > 1e-2):
-                self.brakeForce = -1 * min(frontBrakeForce + backBrakeForce, staticFricGW * Nback)
-            else:
-                self.brakeForce = min(frontBrakeForce + backBrakeForce, staticFricGW * Nback)
-        self.acc += (self.brakeForce + forceGround) / self.mass - 9.81 * sin(theta)
+        gravity_parallel = -g * sin(theta)
+        gravity_perpen = g * cos(theta)
+        
+        Nf = m * gravity_perpen * 0.5
+        Nb = m * gravity_perpen * 0.5
+        acc = 0
+
+        for i in range(5):
+            A = (m * g * cos(theta) * backToCOM - m * g * sin(theta) * COMY) / wheelbase
+            B = m * COMY / wheelbase
+            Nf = max(A - B * (acc - gravity_parallel), 0)
+            Nb = max(m * g * cos(theta) - Nf, 0)
+            maxFront = staticFricGW * Nf
+            maxBack = staticFricGW * Nb
+            appliedFront = min(frontBrakeForce, maxFront)
+            appliedBack = min(backBrakeForce, maxBack)
+            brakeDir = 0
+            if self.vel > 1e-2:
+                brakeDir = -1
+            elif self.vel < 1e-2:
+                brakeDir = 1
+            brakeForce = brakeDir * (appliedFront + appliedBack)
+            acc = (brakeForce + forceGround) / m + gravity_parallel
+        self.acc = acc
+        self.brakeForce = brakeForce
+        Nfront = Nf
+        Nback = Nb
+        if self.skid():
+            if self.acc > 0:
+                self.acc -= kineticFricGW * Nback / m
+            elif self.acc < 0:
+                self.acc += kineticFricGW * Nback / m
+        
+        
         if(self.skid()):
             if(self.acc > 0):
                 self.acc -= kineticFricGW * Nback / self.mass
@@ -208,12 +311,11 @@ class Bike:
     
     def calculateEnergies(self):
         global deltaT, kineticFricGW, theta, Nback
-        vInitial = self.vel
-        vFinal = self.vel + self.acc * deltaT
-        self.kineticE += 0.5 * self.mass * vFinal * vFinal - 0.5 * self.mass * vInitial * vInitial
-        self.potentialE += vInitial / deltaT * sin(theta) * self.mass * 9.81
-        if(rolling):
-            self.heatE += kineticFricGW * Nback * abs(sin(theta)) * deltaT
+        deltaH = self.vel * deltaT * sin(theta)
+        self.kineticE = 0.5 * self.mass * self.vel * self.vel
+        self.potentialE += deltaH * self.mass * 9.81
+        if(self.skid()):
+            self.heatE += kineticFricGW * (max(Nback, 0) + max(Nfront, 0)) * abs(self.vel) * deltaT
     
 running = True
 wheelMass = 100
@@ -231,20 +333,44 @@ time = 0
 
 bike = Bike()
 
+gPos = graph(title="Position vs Time", xtitle="Time", ytitle="Position", align = 'left')
+gPosCurve = gcurve(color=color.red, radius=1)
+
+gVel = graph(title="Velocity vs Time", xtitle="Time", ytitle="Velocity", align = 'left')
+gVelCurve = gcurve(color = color.red, radius = 1)
+
+gAcc = graph(title="Acceleration vs Time", xtitle="Time", ytitle="Acceleration", align = 'left')
+gAccCurve = gcurve(color = color.red, radius = 1)
+
+gKinetic = graph(title="Kinetic Energy vs Time", xtitle="Time", ytitle="Kinetic Energy", align = 'right')
+gKineticCurve = gcurve(color = color.red, radius = 1)
+
+gPotential = graph(title="Potential Energy vs Time", xtitle="Time", ytitle="Potential Energy", align = 'right')
+gPotentialCurve = gcurve(color = color.red, radius = 1)
+
+gThermal = graph(title="Thermal Energy vs Time", xtitle="Time", ytitle="Thermal Energy", align = 'right')
+gThermalCurve = gcurve(color = color.red, radius = 1)
+
 while running:
+    rate(1/deltaT)
+    if justReset:
+        bike.pos = 0
+        bike.vel = 0
+        bike.acc = 0
+        bike.brakeForce = 0
+        Nfront = 0
+        Nback = 0
+        justReset = False
+        continue
     scene.camera.follow(bikeObject)
-    print('Position: ' + bike.pos)
-    print('Velocity: ' + bike.vel)
-    print('Acceleration: ' + bike.acc)
-    print('Brake Force: ' + bike.brakeForce)
+    print('Front Flip?' + str(bike.frontFlip()))
+    print('Back Flip?' + str(bike.backFlip()))
     bike.mass = riderMass + bikeMass
-    print("Skid? " + bike.skid())
-    print('Flip? ' + bike.flip())
+    print("Skid? " + str(bike.skid()))
     theta = rampAngle * pi / 180.0
     rate(1 / deltaT)
-    scene.range = 50
+    scene.range = 25
     scene.autoscale = False
-    bike.calculateNormalForces()
     bike.calculateAcc()
     bike.calculateVel()
     bike.calculatePos()
@@ -252,15 +378,19 @@ while running:
     bikeObject.axis = vec(cos(theta), sin(theta), 0)
     bikeObject.pos = vec(bike.pos * 10 * cos(theta), bike.pos * 10 * sin(theta), 0)
     dir = vec(cos(theta), sin(theta), 0)
-    for segment in rampLine: 
-        segment.axis = dir
-        segment.pos -= vec(bike.vel * deltaT * 100 * cos(theta), bike.vel * deltaT * 100 * sin(theta), 0) 
-        if segment.pos.x < bikeObject.pos.x - 100: 
-            segment.pos.x += 40 * 20
-    
+    perpendicular = vec(-sin(theta), cos(theta), 0)
+    rampLine.axis = dir
+    rampLine.pos = vec(0,0,0) - 4 * perpendicular
     for j in range(len(rampStripes)):
         rampStripes[j].axis = dir
-        rampStripes[j].pos =  (j - 50) * 10 * dir
-
+        rampStripes[j].pos = (j - 1000) * 10 * dir - 3.7*perpendicular
+    ticks += 1
+    
+    gPosCurve.plot(ticks / 10, bike.pos)
+    gVelCurve.plot(ticks / 10, bike.vel)
+    gAccCurve.plot(ticks / 10, bike.acc)
+    gKineticCurve.plot(ticks / 10, bike.kineticE)
+    gPotentialCurve.plot(ticks / 10, bike.potentialE)
+    gThermalCurve.plot(ticks / 10, bike.heatE)
         
         
