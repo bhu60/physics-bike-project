@@ -58,7 +58,10 @@ def resetButton():
     time = 0 
     ticks = 0 
     bikeObject.pos = vec(0,0,0) 
-    bikeObject.axis = vec(0,0,0) 
+    bikeObject.axis = vec(1,0,0) 
+    bike.flipangle = 0
+    bike.omega = 0
+    bikeObject.up = vec(0,1,0)
     bike.pos = 0 
     bike.vel = 0 
     bike.acc = 0 
@@ -99,11 +102,11 @@ bikebody5=cylinder(group=bikeObject, pos=vec(3,-0.71,0), axis=vec(0.7,0.7,0), si
 bar = cylinder(group=bikeObject, pos=vec(7,0,0), axis=vec(0,1,0), size=vec(5,0.2,0.2), color=color.white*0.5)
 handlebars = cylinder(group=bikeObject, pos=vec(5,5,0), axis=vec(0.7,0,0.3), size = vec(3,0.2,0.2), color=color.white*0.5)
 
-head=sphere(group=bikeObject, pos=vec(0,5,0), radius=0.5, color=color.blue)
-neck=cylinder(group=bikeObject, pos=vec(0,4,0), axis=vec(0,1,0), size=vec(0.5,0.4,0.1), color=color.blue)
-body=cylinder(group=bikeObject, pos=vec(0,1.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
-leg1=cylinder(group=bikeObject, pos=vec(0,1.5,0), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
-leg2=cylinder(group=bikeObject, pos=vec(0,1.5,-1), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
+head=sphere(group=bikeObject, pos=vec(1,5,0), radius=0.5, color=color.blue)
+neck=cylinder(group=bikeObject, pos=vec(1,4,0), axis=vec(0,1,0), size=vec(0.5,0.4,0.1), color=color.blue)
+body=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
+leg1=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
+leg2=cylinder(group=bikeObject, pos=vec(1,1.5,-1), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
 
 scene.caption = "\nRamp Angle: "
 def setRampAngle(rampAngleSlider):
@@ -220,6 +223,9 @@ class Bike:
         self.frontSprocketRad = 0.03
         self.backSprocketRad = 0.05
         self.brakeForce = 0
+        self.omega = 0
+        self.flipangle = 0
+
     
     def frontFlip(self):
         global Nback
@@ -306,11 +312,37 @@ class Bike:
         self.potentialE += deltaH * self.mass * 9.81
         if(self.skid()):
             self.heatE += kineticFricGW * (max(Nback, 0) + max(Nfront, 0)) * abs(self.vel) * deltaT
+            
     def rotatewheels(self):
         for part in backwheelparts:
             part.rotate(axis=vec(0,0,1), angle=((self.vel/self.wheelRad)*deltaT), origin=wheel1.pos)
         for part in frontwheelparts:
             part.rotate(axis=vec(0,0,1), angle=((self.vel/self.wheelRad)*deltaT), origin=wheel2.pos)
+            
+    def flipbike(self):
+        global Nfront, Nback, deltaT, theta
+        g = 9.81
+        m = self.mass
+        COMX = (riderMass * seatX + bikeMass * bikeCOMX) / (bikeMass + riderMass)
+        wheelbase = frontWheelX - backWheelX
+        torqueback = m * g * (COMX - backWheelX) * cos(self.flipangle)
+        torquefront = -m * g * (frontWheelX - COMX) * cos(self.flipangle)
+        if Nback <= 0:
+            r = sqrt((frontWheelX - COMX)**2 + COMY**2) 
+            I = m * r**2
+            alpha = torquefront / I
+            pivotpoint = bikeObject.pos + wheel2.pos
+        elif Nfront <= 0:
+            r = sqrt((COMX - backWheelX)**2 + COMY**2)
+            I = m * r**2
+            alpha = torqueback / I 
+            pivotpoint = bikeObject.pos + wheel1.pos
+        else:
+            return
+        self.omega += alpha * deltaT
+        self.flipangle += self.omega * deltaT
+        bikeObject.rotate(axis=vec(0,0,1), angle=self.omega * deltaT, origin=pivotpoint)     
+
 
 running = True
 wheelMass = 100
@@ -371,12 +403,21 @@ while running:
     bike.calculatePos()
     bike.calculateEnergies()
     bike.rotatewheels()
-    bikeObject.axis = vec(cos(theta), sin(theta), 0)
+    bike.flipbike()
+    bikeObject.axis = vec(cos(theta + bike.flipangle), sin(theta + bike.flipangle), 0)
     bikeObject.pos = vec(bike.pos * 10 * cos(theta), bike.pos * 10 * sin(theta), 0)
     dir = vec(cos(theta), sin(theta), 0)
     perpendicular = vec(-sin(theta), cos(theta), 0)
     rampLine.axis = dir
     rampLine.pos = vec(0,0,0) - 4 * perpendicular
+    #if dot(bikeObject.pos - rampLine.pos, perpendicular) < -2:
+   #     bike.vel = 0
+   #     bike.acc = 0
+   #     running = False
+    #    continue
+    if bike.pos > 200 or bike.pos < -10:
+        print("Simulation end (out of bounds)")
+        running = False
     for j in range(len(rampStripes)):
         rampStripes[j].axis = dir
         rampStripes[j].pos = (j - 1000) * 10 * dir - 3.7*perpendicular
@@ -388,3 +429,5 @@ while running:
     gKineticCurve.plot(ticks / 10, bike.kineticE)
     gPotentialCurve.plot(ticks / 10, bike.potentialE)
     gThermalCurve.plot(ticks / 10, bike.heatE)
+        
+        
