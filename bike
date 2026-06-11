@@ -61,7 +61,6 @@ def resetButton():
     bikeObject.axis = vec(1,0,0) 
     bike.flipangle = 0
     bike.omega = 0
-    bikeObject.up = vec(0,1,0)
     bike.pos = 0 
     bike.vel = 0 
     bike.acc = 0 
@@ -315,9 +314,9 @@ class Bike:
             
     def rotatewheels(self):
         for part in backwheelparts:
-            part.rotate(axis=vec(0,0,1), angle=((self.vel/self.wheelRad)*deltaT), origin=wheel1.pos)
+            part.rotate(axis=vec(0,0,1), angle=((-self.vel/self.wheelRad)*deltaT), origin=wheel1.pos)
         for part in frontwheelparts:
-            part.rotate(axis=vec(0,0,1), angle=((self.vel/self.wheelRad)*deltaT), origin=wheel2.pos)
+            part.rotate(axis=vec(0,0,1), angle=((-self.vel/self.wheelRad)*deltaT), origin=wheel2.pos)
             
     def flipbike(self):
         global Nfront, Nback, deltaT, theta
@@ -410,14 +409,6 @@ while running:
     perpendicular = vec(-sin(theta), cos(theta), 0)
     rampLine.axis = dir
     rampLine.pos = vec(0,0,0) - 4 * perpendicular
-    #if dot(bikeObject.pos - rampLine.pos, perpendicular) < -2:
-   #     bike.vel = 0
-   #     bike.acc = 0
-   #     running = False
-    #    continue
-    if bike.pos > 200 or bike.pos < -10:
-        print("Simulation end (out of bounds)")
-        running = False
     for j in range(len(rampStripes)):
         rampStripes[j].axis = dir
         rampStripes[j].pos = (j - 1000) * 10 * dir - 3.7*perpendicular
