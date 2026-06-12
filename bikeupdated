@@ -286,13 +286,6 @@ class Bike:
                 self.acc -= kineticFricGW * Nback / m
             elif self.acc < 0:
                 self.acc += kineticFricGW * Nback / m
-        
-        
-        if(self.skid()):
-            if(self.acc > 0):
-                self.acc -= kineticFricGW * Nback / self.mass
-            elif(self.acc < 0):
-                self.acc += kineticFricGW * Nback / self.mass
     
     def calculateVel(self):
         global deltaT
