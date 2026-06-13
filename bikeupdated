@@ -19,7 +19,13 @@ justReset = False
 reset = button(bind = resetButton, text = 'Reset', background = color.green, pos=scene.title_anchor)
 
 def resetButton(): 
-    global rampAngle, riderMass, bikeMass, backBrakeForce, frontBrakeForce, pedalsForce, staticFricGW, kineticFricGW, time, ticks, theta, Nfront, Nback , justReset
+    global rampAngle, riderMass, bikeMass, backBrakeForce, frontBrakeForce, pedalsForce, staticFricGW, kineticFricGW, time, ticks, theta, Nfront, Nback , justReset, bikeObject, running
+    global wheel1, wheel2, spoke1, spoke2, spoke3, spoke4, spoke5, spoke6, spoke7, spoke8, spoke9, spoke10, backwheelparts, frontwheelparts, bikebody1, bikebody2, bikebody3, bikebody4, bikebody5, bar, handlebars, head, neck, body, leg1, leg2
+    oldParts = [wheel1, wheel2, spoke1, spoke2, spoke3, spoke4, spoke5, spoke6, spoke7, spoke8, spoke9, spoke10, bikebody1, bikebody2, bikebody3, bikebody4, bikebody5, bar, handlebars, head, neck, body, leg1, leg2]
+    for part in oldParts:
+        part.pos = vec(999999, 0, 0)
+        part.visible = False
+    running = True
     justReset = True
     bike.pos = 0 
     bike.vel = 0 
@@ -65,8 +71,6 @@ def resetButton():
     kineticFricGWSlider.disabled = False
     time = 0 
     ticks = 0 
-    bikeObject.pos = vec(0,0,0) 
-    bikeObject.axis = vec(1,0,0) 
     bike.flipangle = 0
     bike.omega = 0
     bike.pos = 0 
@@ -84,6 +88,48 @@ def resetButton():
     gThermalCurve.delete() 
     time = 0 
     ticks = 0
+    dir=vec(1,0,0)
+    perpendicular = vec(0,1,0)
+    rampLine.axis = dir
+    rampLine.pos = vec(0,0,0) - 4 * perpendicular
+    for j in range(len(rampStripes)):
+        rampStripes[j].axis = dir
+        rampStripes[j].pos = (j - 1000) * 10 * dir - 3.7*perpendicular
+    print('B')
+    bikeObject = group()
+    print('C')
+    wheel1=ring(group=bikeObject, pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
+    spoke1=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
+    spoke2=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
+    spoke3=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0), color=color.white*0.5)
+    spoke4=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0), color=color.white*0.5)
+    spoke5=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0), color=color.white*0.5)
+    wheel2=ring(group=bikeObject, pos=vec(7,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
+    spoke6=box(group=bikeObject, pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
+    spoke7=box(group=bikeObject, pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
+    spoke8=box(group=bikeObject, pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(1,1,0), color=color.white*0.5)
+    spoke9=box(group=bikeObject, pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(-1,1,0), color=color.white*0.5)
+    spoke10=box(group=bikeObject, pos=vec(7,0,0), size=vec(4,0.1,0.1), axis=vec(0,-1,0), color=color.white*0.5)
+    backwheelparts = [wheel1, spoke1, spoke2, spoke3, spoke4, spoke5]
+    frontwheelparts = [wheel2, spoke6, spoke7, spoke8, spoke9, spoke10]
+    bikebody1=cylinder(group=bikeObject, pos=vec(0,0,0), axis=vec(0.5,0.6,0), size=vec(3.5,0.2,0.2), color=color.white*0.5)
+    bikebody2=cylinder(group=bikeObject, pos=vec(0,0,0), axis=vec(0.5,-0.1,0), size=vec(3.3,0.2,0.2), color=color.white*0.5)
+    bikebody3=cylinder(group=bikeObject, pos=vec(2.35,2.5,0), axis=vec(0.15,-0.6,0), size=vec(3.4,0.2,0.2), color=color.white*0.5)
+    bikebody4=cylinder(group=bikeObject, pos=vec(2.35,2.5,0), axis=vec(0.7,0.15,0), size=vec(4.7,0.2,0.2), color=color.white*0.5)
+    bikebody5=cylinder(group=bikeObject, pos=vec(3,-0.71,0), axis=vec(0.7,0.7,0), size=vec(5.75,0.2,0.2), color=color.white*0.5)
+    
+    bar = cylinder(group=bikeObject, pos=vec(7,0,0), axis=vec(0,1,0), size=vec(5,0.2,0.2), color=color.white*0.5)
+    handlebars = cylinder(group=bikeObject, pos=vec(5,5,0), axis=vec(0.7,0,0.3), size = vec(3,0.2,0.2), color=color.white*0.5)
+    
+    head=sphere(group=bikeObject, pos=vec(1,5,0), radius=0.5, color=color.blue)
+    neck=cylinder(group=bikeObject, pos=vec(1,4,0), axis=vec(0,1,0), size=vec(0.5,0.4,0.1), color=color.blue)
+    body=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
+    leg1=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
+    leg2=cylinder(group=bikeObject, pos=vec(1,1.5,-1), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
+    print('D')
+    bikeObject.pos = vec(0, 0, 0)
+    bikeObject.axis = vec(1, 0, 0)
+    print('E')
 
 bikeObject = group()
 wheel1=ring(group=bikeObject, pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
@@ -114,6 +160,9 @@ neck=cylinder(group=bikeObject, pos=vec(1,4,0), axis=vec(0,1,0), size=vec(0.5,0.
 body=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
 leg1=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
 leg2=cylinder(group=bikeObject, pos=vec(1,1.5,-1), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
+bikeObject.pos = vec(0, 0, 0)
+bikeObject.axis = vec(1, 0, 0)
+
 
 scene.caption = "\nRamp Angle: "
 def setRampAngle(rampAngleSlider):
@@ -314,6 +363,7 @@ class Bike:
             self.heatE += kineticFricGW * (max(Nback, 0) + max(Nfront, 0)) * abs(self.vel) * deltaT
             
     def rotatewheels(self):
+        global backwheelparts, frontwheelparts
         for part in backwheelparts:
             part.rotate(axis=vec(0,0,1), angle=((-self.vel/self.wheelRad)*deltaT), origin=wheel1.pos)
         for part in frontwheelparts:
@@ -342,22 +392,16 @@ class Bike:
             I = m * r**2
             alpha = torquefront / I
             pivotpoint = bikeObject.pos + wheel2.pos
-            print("pivot", pivotpoint)
-            print("bike", bikeObject.pos)
         elif Nfront <= 0:
             r = sqrt((COMX - backWheelX)**2 + COMY**2) / 10
             I = m * r**2
             alpha = torqueback / I 
             pivotpoint = bikeObject.pos + wheel1.pos
-            print("pivot", pivotpoint)
-            print("bike", bikeObject.pos)
         else:
             return
         self.omega += alpha * deltaT
         self.flipangle += self.omega * deltaT
-        print(str(self.flipangle))
         if(abs(self.flipangle) >= (pi - 1)):
-            print('A')
             running = False
             
         bikeObject.rotate(axis=vec(0,0,1), angle=self.omega * deltaT, origin = pivotpoint)     
@@ -400,18 +444,19 @@ gThermalCurve = gcurve(color = color.red, radius = 1)
 firstRun = True
 flip = False
 
-while running:
+while True:
     rate(1/deltaT)
     if justReset:
+        
         bike.pos = 0
         bike.vel = 0
         bike.acc = 0
         bike.brakeForce = 0
         Nfront = 0
         Nback = 0
+    if not running:
+        continue
     scene.camera.follow(bikeObject)
-    print('Front Flip?' + str(bike.frontFlip()))
-    print('Back Flip?' + str(bike.backFlip()))
     bike.mass = riderMass + bikeMass
 #    print("Skid? " + str(bike.skid()))
     theta = rampAngle * pi / 180.0
