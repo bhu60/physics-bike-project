@@ -228,12 +228,12 @@ class Bike:
     
     def frontFlip(self):
         global Nback
-        print('Nback: ' + str(Nback))
+#        print('Nback: ' + str(Nback))
         return Nback <= 0
         
     def backFlip(self):
         global Nfront
-        print('Nfront: ' + str(Nfront))
+#        print('Nfront: ' + str(Nfront))
         return Nfront <= 0
     
     def skid(self):
@@ -319,16 +319,29 @@ class Bike:
         wheelbase = frontWheelX - backWheelX
         torqueback = m * g * (COMX - backWheelX) * cos(self.flipangle)
         torquefront = -m * g * (frontWheelX - COMX) * cos(self.flipangle)
+        if Nback <= 0 or Nfront <= 0:
+            rampAngleSlider.disabled = True
+            riderMassSlider.disabled = True
+            bikeMassSlider.disabled = True
+            backBrakeForceSlider.disabled = True
+            frontBrakeForceSlider.disabled = True
+            pedalsForceSlider.disabled = True
+            staticFricGWSlider.disabled = True
+            kineticFricGWSlider.disabled = True
         if Nback <= 0:
             r = sqrt((frontWheelX - COMX)**2 + COMY**2) 
             I = m * r**2
             alpha = torquefront / I
             pivotpoint = bikeObject.pos + wheel2.pos
+            print("pivot", pivotpoint)
+            print("bike", bikeObject.pos)
         elif Nfront <= 0:
             r = sqrt((COMX - backWheelX)**2 + COMY**2)
             I = m * r**2
             alpha = torqueback / I 
             pivotpoint = bikeObject.pos + wheel1.pos
+            print("pivot", pivotpoint)
+            print("bike", bikeObject.pos)
         else:
             return
         self.omega += alpha * deltaT
@@ -337,7 +350,8 @@ class Bike:
         if(abs(self.flipangle) >= pi - 0.34):
             print('A')
             running = False
-        bikeObject.rotate(axis=vec(0,0,1), angle=self.omega * deltaT, origin=pivotpoint)     
+            
+        bikeObject.rotate(axis=vec(0,0,1), angle=self.omega * deltaT, origin = pivotpoint)     
 
 
 running = True
