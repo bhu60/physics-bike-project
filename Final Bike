@@ -247,6 +247,7 @@ Nfront = 0
 Nback = 0
 
 rampLine = box(pos=vec(0,-0.3, 0), size=vec(50000, 0.8, 0.8), color=color.white)
+skidLabel = label(pos = vec(0, 20, 0), text = '', color=color.green, box = False, opacity = 0, height = 16)
 
 rampStripes = []
 for j in range(-1000, 1000):
@@ -294,10 +295,12 @@ class Bike:
         return Nfront <= 0
     
     def skid(self):
-        if(frontBrakeForce > staticFricGW * Nfront):
+        if(frontBrakeForce > staticFricGW * Nfront) or (backBrakeForce > staticFricGW * Nback):
+            skidLabel.text = 'Skidding!'
+            skidLabel.color = color.red
             return True
-        if(backBrakeForce > staticFricGW * Nback):
-            return True
+        skidLabel.text = 'Not Skidding'
+        skidLabel.color = color.green
         return False
     
     
@@ -487,7 +490,7 @@ while True:
         rampStripes[j].axis = dir
         rampStripes[j].pos = (j - 1000) * 10 * dir - 3.7*perpendicular
     ticks += 1
-    
+    skidLabel.pos = bikeObject.pos + vec(0, 20, 0)
     gPosCurve.plot(ticks / 10, bike.pos)
     gVelCurve.plot(ticks / 10, bike.vel)
     gAccCurve.plot(ticks / 10, bike.acc)
