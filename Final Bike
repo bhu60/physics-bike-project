@@ -95,9 +95,7 @@ def resetButton():
     for j in range(len(rampStripes)):
         rampStripes[j].axis = dir
         rampStripes[j].pos = (j - 1000) * 10 * dir - 3.7*perpendicular
-    print('B')
     bikeObject = group()
-    print('C')
     wheel1=ring(group=bikeObject, pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
     spoke1=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
     spoke2=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
@@ -126,10 +124,8 @@ def resetButton():
     body=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
     leg1=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
     leg2=cylinder(group=bikeObject, pos=vec(1,1.5,-1), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
-    print('D')
     bikeObject.pos = vec(0, 0, 0)
     bikeObject.axis = vec(1, 0, 0)
-    print('E')
 
 bikeObject = group()
 wheel1=ring(group=bikeObject, pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
