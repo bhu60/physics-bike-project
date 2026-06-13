@@ -312,7 +312,7 @@ class Bike:
             part.rotate(axis=vec(0,0,1), angle=((-self.vel/self.wheelRad)*deltaT), origin=wheel2.pos)
             
     def flipbike(self):
-        global Nfront, Nback, deltaT, theta
+        global Nfront, Nback, deltaT, theta, running
         g = 9.81
         m = self.mass
         COMX = (riderMass * seatX + bikeMass * bikeCOMX) / (bikeMass + riderMass)
@@ -333,6 +333,10 @@ class Bike:
             return
         self.omega += alpha * deltaT
         self.flipangle += self.omega * deltaT
+        print(str(self.flipangle))
+        if(abs(self.flipangle) >= pi - 0.34):
+            print('A')
+            running = False
         bikeObject.rotate(axis=vec(0,0,1), angle=self.omega * deltaT, origin=pivotpoint)     
 
 
@@ -370,6 +374,8 @@ gPotentialCurve = gcurve(color = color.red, radius = 1)
 gThermal = graph(title="Thermal Energy vs Time", xtitle="Time", ytitle="Thermal Energy", align = 'right')
 gThermalCurve = gcurve(color = color.red, radius = 1)
 
+firstRun = True
+
 while running:
     rate(1/deltaT)
     if justReset:
@@ -385,13 +391,21 @@ while running:
     print('Front Flip?' + str(bike.frontFlip()))
     print('Back Flip?' + str(bike.backFlip()))
     bike.mass = riderMass + bikeMass
-    print("Skid? " + str(bike.skid()))
+#    print("Skid? " + str(bike.skid()))
     theta = rampAngle * pi / 180.0
     rate(1 / deltaT)
     scene.range = 25
     scene.autoscale = False
-    bike.calculateAcc()
-    bike.calculateVel()
+    if firstRun:
+        bike.calculateAcc()
+        bike.calculateVel()
+    else:
+        if(Nback <= 0 or Nfront <= 0):
+            bike.acc = 0
+            bike.vel = 0
+        else:
+            bike.calculateAcc()
+            bike.calculateVel()
     bike.calculatePos()
     bike.calculateEnergies()
     bike.rotatewheels()
@@ -413,5 +427,5 @@ while running:
     gKineticCurve.plot(ticks / 10, bike.kineticE)
     gPotentialCurve.plot(ticks / 10, bike.potentialE)
     gThermalCurve.plot(ticks / 10, bike.heatE)
-        
+    firstRun = False
         
