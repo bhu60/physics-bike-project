@@ -338,14 +338,14 @@ class Bike:
             staticFricGWSlider.disabled = True
             kineticFricGWSlider.disabled = True
         if Nback <= 0:
-            r = sqrt((frontWheelX - COMX)**2 + COMY**2) 
+            r = sqrt((frontWheelX - COMX)**2 + COMY**2) / 10
             I = m * r**2
             alpha = torquefront / I
             pivotpoint = bikeObject.pos + wheel2.pos
             print("pivot", pivotpoint)
             print("bike", bikeObject.pos)
         elif Nfront <= 0:
-            r = sqrt((COMX - backWheelX)**2 + COMY**2)
+            r = sqrt((COMX - backWheelX)**2 + COMY**2) / 10
             I = m * r**2
             alpha = torqueback / I 
             pivotpoint = bikeObject.pos + wheel1.pos
