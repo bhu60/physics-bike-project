@@ -148,7 +148,7 @@ def setBackBrakeForce(backBrakeForceSlider):
     global backBrakeForce
     backBrakeForceText.text = '{:1.1f}'.format(backBrakeForceSlider.value)
     backBrakeForce = backBrakeForceSlider.value
-backBrakeForceSlider = slider(bind = setBackBrakeForce, min=0, max=1000, step = 5, value = 0)
+backBrakeForceSlider = slider(bind = setBackBrakeForce, min=0, max=500, step = 5, value = 0)
 backBrakeForceText = wtext(text='{:1.1f}'.format(backBrakeForceSlider.value))
 scene.append_to_caption(' Newtons')
 
@@ -157,7 +157,7 @@ def setFrontBrakeForce(frontBrakeForceSlider):
     global frontBrakeForce
     frontBrakeForceText.text = '{:1.1f}'.format(frontBrakeForceSlider.value)
     frontBrakeForce = frontBrakeForceSlider.value
-frontBrakeForceSlider = slider(bind = setFrontBrakeForce, min=0, max=1000, step = 5, value = 0)
+frontBrakeForceSlider = slider(bind = setFrontBrakeForce, min=0, max=500, step = 5, value = 0)
 frontBrakeForceText = wtext(text='{:1.1f}'.format(frontBrakeForceSlider.value))
 scene.append_to_caption(' Newtons')
 
@@ -166,7 +166,7 @@ def setpedalsForce(pedalsForceSlider):
     global pedalsForce
     pedalsForceText.text = '{:1.1f}'.format(pedalsForceSlider.value)
     pedalsForce = pedalsForceSlider.value
-pedalsForceSlider = slider(bind = setpedalsForce, min=0, max=1000, step = 5, value = 0)
+pedalsForceSlider = slider(bind = setpedalsForce, min=0, max=500, step = 5, value = 0)
 pedalsForceText = wtext(text='{:1.1f}'.format(pedalsForceSlider.value))
 scene.append_to_caption(' Newtons')
 
@@ -328,6 +328,7 @@ class Bike:
         torqueback = m * g * (COMX - backWheelX) * cos(self.flipangle)
         torquefront = -m * g * (frontWheelX - COMX) * cos(self.flipangle)
         if Nback <= 0 or Nfront <= 0:
+            
             rampAngleSlider.disabled = True
             riderMassSlider.disabled = True
             bikeMassSlider.disabled = True
@@ -355,7 +356,7 @@ class Bike:
         self.omega += alpha * deltaT
         self.flipangle += self.omega * deltaT
         print(str(self.flipangle))
-        if(abs(self.flipangle) >= pi - 0.34):
+        if(abs(self.flipangle) >= (pi - 1)):
             print('A')
             running = False
             
@@ -397,6 +398,7 @@ gThermal = graph(title="Thermal Energy vs Time", xtitle="Time", ytitle="Thermal 
 gThermalCurve = gcurve(color = color.red, radius = 1)
 
 firstRun = True
+flip = False
 
 while running:
     rate(1/deltaT)
