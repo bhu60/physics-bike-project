@@ -55,6 +55,14 @@ def resetButton():
     staticFricGWText.text = '0' 
     kineticFricGWSlider.value = 0 
     kineticFricGWText.text = '0' 
+    rampAngleSlider.disabled = False
+    riderMassSlider.disabled = False
+    bikeMassSlider.disabled = False
+    backBrakeForceSlider.disabled = False
+    frontBrakeForceSlider.disabled = False
+    pedalsForceSlider.disabled = False
+    staticFricGWSlider.disabled = False
+    kineticFricGWSlider.disabled = False
     time = 0 
     ticks = 0 
     bikeObject.pos = vec(0,0,0) 
@@ -399,8 +407,6 @@ while running:
         bike.brakeForce = 0
         Nfront = 0
         Nback = 0
-        justReset = False
-        continue
     scene.camera.follow(bikeObject)
     print('Front Flip?' + str(bike.frontFlip()))
     print('Back Flip?' + str(bike.backFlip()))
@@ -410,7 +416,7 @@ while running:
     rate(1 / deltaT)
     scene.range = 25
     scene.autoscale = False
-    if firstRun:
+    if firstRun or justReset:
         bike.calculateAcc()
         bike.calculateVel()
     else:
@@ -442,4 +448,5 @@ while running:
     gPotentialCurve.plot(ticks / 10, bike.potentialE)
     gThermalCurve.plot(ticks / 10, bike.heatE)
     firstRun = False
+    justReset = False
         
