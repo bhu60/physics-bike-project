@@ -20,7 +20,6 @@ reset = button(bind = resetButton, text = 'Reset', background = color.green, pos
 
 def resetButton(): 
     global rampAngle, riderMass, bikeMass, backBrakeForce, frontBrakeForce, pedalsForce, staticFricGW, kineticFricGW, time, ticks, theta, Nfront, Nback , justReset
-    makeBike()
     running = True
     justReset = True
     bike.pos = 0 
@@ -67,8 +66,6 @@ def resetButton():
     kineticFricGWSlider.disabled = False
     time = 0 
     ticks = 0 
-    bikeObject.pos = vec(0,0,0) 
-    bikeObject.axis = vec(1,0,0) 
     bike.flipangle = 0
     bike.omega = 0
     bike.pos = 0 
@@ -94,7 +91,9 @@ def resetButton():
         rampStripes[j].axis = dir
         rampStripes[j].pos = (j - 1000) * 10 * dir - 3.7*perpendicular
     bikeObject.delete()
+    print('B')
     bikeObject = group()
+    print('C')
     wheel1=ring(group=bikeObject, pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
     spoke1=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(1,0,0), color=color.white*0.5)
     spoke2=box(group=bikeObject, pos=vec(0,0,0), size=vec(4,0.1,0.1), axis=vec(0,1,0), color=color.white*0.5)
@@ -123,8 +122,10 @@ def resetButton():
     body=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0,1,0), size=vec(2.5,2,1), color=color.blue)
     leg1=cylinder(group=bikeObject, pos=vec(1,1.5,0), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
     leg2=cylinder(group=bikeObject, pos=vec(1,1.5,-1), axis=vec(0.5,-0.4,0), size=vec(2,0.2,0.2), color=color.blue)
+    print('D')
     bikeObject.pos = vec(0, 0, 0)
     bikeObject.axis = vec(1, 0, 0)
+    print('E')
 
 bikeObject = group()
 wheel1=ring(group=bikeObject, pos=vec(0,0,0), axis=vec(0,0,1), radius=2, thickness=0.1, color=color.white*0.5)
@@ -454,6 +455,8 @@ while running:
         bike.brakeForce = 0
         Nfront = 0
         Nback = 0
+    if not running:
+        continue
     scene.camera.follow(bikeObject)
     print('Front Flip?' + str(bike.frontFlip()))
     print('Back Flip?' + str(bike.backFlip()))
