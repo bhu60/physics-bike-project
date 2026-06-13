@@ -19,7 +19,8 @@ justReset = False
 reset = button(bind = resetButton, text = 'Reset', background = color.green, pos=scene.title_anchor)
 
 def resetButton(): 
-    global rampAngle, riderMass, bikeMass, backBrakeForce, frontBrakeForce, pedalsForce, staticFricGW, kineticFricGW, time, ticks, theta, Nfront, Nback , justReset
+    global rampAngle, riderMass, bikeMass, backBrakeForce, frontBrakeForce, pedalsForce, staticFricGW, kineticFricGW, time, ticks, theta, Nfront, Nback , justReset, bikeObject, running
+    global wheel1, wheel2, spoke1, spoke2, spoke3, spoke4, spoke5, spoke6, spoke7, spoke8, spoke9, spoke10, backwheelparts, frontwheelparts, bikebody1, bikebody2, bikebody3, bikebody4, bar, handlebars, head, neck, body, leg1, leg2
     running = True
     justReset = True
     bike.pos = 0 
